@@ -1,0 +1,22 @@
+<!--generate random blocks-->
+
+<div class="container">
+    <div class="blocks">
+        <%@letters.each do |letter|%>
+            <div class="character">
+                <%= letter %>
+            </div>
+        <% end %>
+    </div>
+    <div class="form">
+        <form action="/score">
+            <input type="text" name="guess">
+            <input type="hidden" name="letters_grid" value="<%=@letters.join%>">
+            <input type="submit">
+        </form>
+    </div>
+</div>
+
+<!--get user guess-->
+
+
