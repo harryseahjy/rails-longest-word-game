@@ -10,10 +10,12 @@ class GamesController < ApplicationController
         require 'json'
         require 'open-uri'
         @guess = params[:guess]
-        @letters_grid = params[:letters_grid]
+        @guess.upcase! unless @guess == nil
+        @letters = params[:letters]
         @response = ""
+        session[:score] == nil ? @score = 0 : @score = session[:score]
         # check the grid
-        leftover_letters = @guess.split("") - @letters_grid.split("")
+        leftover_letters = @guess.split("") - @letters.split("")
         # check the dictionary
         url = "https://wagon-dictionary.herokuapp.com/#{@guess}"
         html = open(url).read
@@ -21,11 +23,13 @@ class GamesController < ApplicationController
         word_exist = rb_text["found"]
         # If statements
         if leftover_letters.length > 0
-            @response = "Sorry, but #{@guess} cannot be built out of #{@letters_grid.chars.join(", ").to_s}"
+            @response = "Sorry, but #{@guess.upcase} cannot be built out of #{@letters.chars.join(", ").to_s}"
         elsif word_exist == false
-            @response = "Sorry, but #{@guess} does not seem to be a valid English word."
+            @response = "Sorry, but #{@guess.upcase} does not seem to be a valid English word."
         else
-            @response = "Congratulations, #{@guess} is a valid English word!"
+            @response = "Congratulations, #{@guess.upcase} is a valid English word!"
+            @score += @guess.chars.length
+            # session[:score] = @score
         end
     end
 end
